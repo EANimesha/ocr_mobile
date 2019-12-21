@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ocr_mobile/UI/image_camera.dart';
+import 'package:ocr_mobile/UI/image_gallery.dart';
 
 class AppImage extends StatelessWidget {
   const AppImage({Key key}) : super(key: key);
@@ -27,7 +28,11 @@ class AppImage extends StatelessWidget {
               RaisedButton(
                 color: Colors.blue,
                 child: Text('Gallery Image'),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context)=>GalleryImage()));
+                },
               )
             ],
           ),

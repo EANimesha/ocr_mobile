@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:ffi';
 import 'dart:io';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:async/async.dart';
