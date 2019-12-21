@@ -1,5 +1,8 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:ocr_mobile/UI/preview_image_screen.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 
 class CameraImage extends StatefulWidget {
   CameraImage({Key key}) : super(key: key);
@@ -19,6 +22,7 @@ class _CameraImageState extends State<CameraImage> {
 
     availableCameras().then((availableCameras) {
       cameras = availableCameras;
+      
       if (cameras.length > 0) {
         _initCameraController(cameras[0]).then((void v) {});
       } else {
@@ -83,7 +87,7 @@ class _CameraImageState extends State<CameraImage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   // _cameraTogglesRowWidget(),
-                  // _captureControlRowWidget(context),
+                  _captureControlRowWidget(context),
                   Spacer()
                 ],
               ),
@@ -105,12 +109,32 @@ class _CameraImageState extends State<CameraImage> {
       ),
     );
   }
-
+  
   return AspectRatio(
       aspectRatio: controller.value.aspectRatio,
       child: CameraPreview(controller),
     );
 }
+
+ Widget _captureControlRowWidget(context) {
+    return Expanded(
+      child: Align(
+        alignment: Alignment.center,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            FloatingActionButton(
+                child: Icon(Icons.camera),
+                backgroundColor: Colors.blueGrey,
+                onPressed: () {
+                  _onCapturePressed(context);
+                })
+          ],
+        ),
+      ),
+    );
+  }
 
   void _showCameraException(CameraException e) {
     String errorText = 'Error: ${e.code}\nError Message: ${e.description}';
@@ -118,4 +142,25 @@ class _CameraImageState extends State<CameraImage> {
 
     print('Error: ${e.code}\n${e.description}');
   }
+
+  void _onCapturePressed(context) async {
+  try {
+    // 1
+    final path = join(
+      (await getTemporaryDirectory()).path,
+      '${DateTime.now()}.jpg',
+    );
+    // 2
+    await controller.takePicture(path);
+    // 3
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PreviewImageScreen(imagePath: path),
+      ),
+    );
+  } catch (e) {
+    print(e);
+  }
+}
 }
