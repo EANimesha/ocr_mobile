@@ -29,6 +29,8 @@ dependencies:
   http: ^0.12.0+2
   dio: ^3.0.7
   image_picker: ^0.6.2
+  equatable: ^0.4.0
+  dartz: ^0.8.6
   
 dev_dependencies:
   flutter_test:
