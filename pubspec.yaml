@@ -31,10 +31,12 @@ dependencies:
   image_picker: ^0.6.2
   equatable: ^0.4.0
   dartz: ^0.8.6
+  get_it: ^2.0.1
   
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  mockito: ^4.1.0
 
 
 # For information on the generic Dart part of this file, see the
