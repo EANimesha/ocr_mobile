@@ -1,23 +1,25 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:dartz/dartz.dart';
-import 'package:ocr_mobile/core/error/failures.dart';
+// import 'package:dartz/dartz.dart';
+// import 'package:ocr_mobile/core/error/failures.dart';
 import 'package:ocr_mobile/features/OCR/data/models/Ocr_result_model.dart';
 import 'package:ocr_mobile/features/OCR/domain/entities/ocr_result.dart';
 import 'package:http/http.dart' as http;
 import 'package:async/async.dart';
+import 'package:ocr_mobile/features/OCR/presentation/bloc/ocr_bloc.dart';
 import 'package:path/path.dart';
 
 abstract class OcrRepository{
-  Future<Either<Failure,OcrResult>> convertImageToText(File image);
+  convertImageToText(File image);
   // Future<Either<Failure,OcrResult>> convertPdfToText(File image);
 }
 
 class FakeOcrRepository implements OcrRepository{
-  OcrResult result;
   @override
-  Future<Either<Failure, OcrResult>> convertImageToText(File image) async {
+   convertImageToText(File image) async {
+    OcrResult result;
+    print('inside repo');
     var stream =
         new http.ByteStream(DelegatingStream.typed(image.openRead()));
     var length = await image.length();
@@ -34,12 +36,15 @@ class FakeOcrRepository implements OcrRepository{
     request.headers.addAll(headers);
     request.files.add(multipartFile);
 
-    var response = await request.send();
+    final response = await request.send();
     
-    http.Response.fromStream(response).then((res){
-      result=OcrResultModel.fromJson(json.decode(res.body));
-    });
-    return null;
+    if(response.statusCode==200){
+      http.Response.fromStream(response).then((res){
+        result= OcrResultModel.fromJson(json.decode(res.body));
+        bloc.addResult(result);
+      });
+    }
+    
   }
 
 }
