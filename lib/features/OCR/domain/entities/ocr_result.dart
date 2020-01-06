@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-class OcrResult{
+class OcrResult extends Equatable{
   final double meanConfidentialLevel;
   final String textResult;
 
@@ -8,4 +9,9 @@ class OcrResult{
     @required this.meanConfidentialLevel,
     @required this.textResult
   });
+
+  List<Object> get props=>[
+    meanConfidentialLevel,
+    textResult
+  ];
 }

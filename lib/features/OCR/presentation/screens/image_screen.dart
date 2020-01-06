@@ -68,7 +68,13 @@ class _ImageScreenState extends State<ImageScreen> {
                  child: Text("Convert to text"),
                  onPressed: ()=>_upload(_image,context),
                )
+              ,
+              Container(
+                child: Expanded(
+                  child: Text('results here'),
 
+                ),
+              )
             ],
           )
         ),

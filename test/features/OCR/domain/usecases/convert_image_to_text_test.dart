@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:ocr_mobile/features/OCR/data/repositories/ocr_repository.dart';
 import 'package:ocr_mobile/features/OCR/domain/entities/ocr_result.dart';
-import 'package:ocr_mobile/features/OCR/domain/repositories/ocr_repository.dart';
 import 'package:ocr_mobile/features/OCR/domain/usecases/convert_image_to_text.dart';
 
 class MockOcrRepository extends Mock implements OcrRepository{
