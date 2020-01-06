@@ -24,7 +24,7 @@ void main(){
   final tOcrResult=OcrResult(meanConfidentialLevel: 0.95, textResult: 'test text',);
 
   test(
-    'should get Ocr result for image file from the repository',
+    'should get OcrResult for image file from the repository',
      ()async{
        when(mockOcrRepository.convertImageToText(any))
        .thenAnswer((_)async=>Right(tOcrResult));

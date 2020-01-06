@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ocr_mobile/UI/image.dart';
+import 'package:ocr_mobile/features/OCR/presentation/screens/image_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: AppImage(),
+      home: ImageScreen(),
     );
   }
 }
