@@ -1,21 +1,26 @@
 import 'dart:async';
+import 'package:bloc/bloc.dart';
+import 'package:ocr_mobile/features/OCR/domain/usecases/convert_image_to_text.dart';
+import './bloc.dart';
+import 'package:meta/meta.dart';
 
-import 'package:ocr_mobile/features/OCR/domain/entities/ocr_result.dart';
+class OcrBloc extends Bloc<OcrEvent, OcrState> {
+  final ConvertImageToText convertImageToText;
 
+  OcrBloc({@required this.convertImageToText})
+      : assert(convertImageToText != null);
 
-class OcrBloc{
-    StreamController<OcrResult> _ocrResultController=StreamController();
-    Stream<OcrResult> get outOcrResult=>_ocrResultController.stream;
-    Sink<OcrResult> get inOcrResult=>_ocrResultController.sink;
+  @override
+  OcrState get initialState => Empty();
 
-
-    void addResult(OcrResult result){
-      inOcrResult.add(result);
-    }
-
-    void dispose(){
-      _ocrResultController.close();
-    }
+  @override
+  Stream<OcrState> mapEventToState(
+    OcrEvent event,
+  ) async* {
+    yield Loading();
+    if(event is ConvertImageToText){
+      final res=await convertImageToText(image:event.props[0]);
+      yield Loaded(result: res);
+    } 
+  }
 }
-
-final bloc=OcrBloc();
