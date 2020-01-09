@@ -2,19 +2,19 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:ocr_mobile/features/OCR/data/datasources/third_party_ocr_datasource.dart';
-import 'package:ocr_mobile/features/OCR/domain/entities/ocr_result.dart';
-import 'package:ocr_mobile/features/OCR/domain/usecases/convert_image_to_text.dart';
-import 'package:ocr_mobile/features/OCR/domain/usecases/get_image_usecase/image.dart';
-import 'package:ocr_mobile/features/OCR/domain/usecases/get_image_usecase/image_fatory.dart';
+import 'package:ocr_mobile/features/OCR/Buisness Layer/entities/ocr_result.dart';
+import 'package:ocr_mobile/features/OCR/Buisness Layer/usecases/get_image_usecase/image.dart';
+import 'package:ocr_mobile/features/OCR/Buisness Layer/usecases/get_image_usecase/image_fatory.dart';
+import 'package:ocr_mobile/features/OCR/Buisness Layer/usecases/get_result_usecase/convert_image_to_text.dart';
 
-class ImageScreen extends StatefulWidget {
-  ImageScreen({Key key}) : super(key: key);
+class AppScreen extends StatefulWidget {
+  AppScreen({Key key}) : super(key: key);
 
   @override
-  _ImageScreenState createState() => _ImageScreenState();
+  _AppScreenState createState() => _AppScreenState();
 }
 
-class _ImageScreenState extends State<ImageScreen> {
+class _AppScreenState extends State<AppScreen> {
 
   File _image;
   ImageFactory imageFactory=ImageFactory();

@@ -3,12 +3,10 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:ocr_mobile/features/OCR/data/repositories/ocr_repository.dart';
-import 'package:ocr_mobile/features/OCR/domain/entities/ocr_result.dart';
 
 class RealOcrRepository implements OcrRepository{
   @override
   convertImageToText(File image) async {
-    OcrResult result;
     print('inside repo');
     // print(image.path);
   FormData formData=new FormData.from({

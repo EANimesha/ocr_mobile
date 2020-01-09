@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:ocr_mobile/features/OCR/data/models/Ocr_result_model.dart';
 import 'package:ocr_mobile/features/OCR/data/repositories/ocr_repository.dart';
-import 'package:ocr_mobile/features/OCR/domain/entities/ocr_result.dart';
+import 'package:ocr_mobile/features/OCR/Buisness Layer/entities/ocr_result.dart';
 
 class FakeOcrRepository implements OcrRepository{
   @override

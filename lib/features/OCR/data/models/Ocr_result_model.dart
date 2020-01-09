@@ -1,4 +1,4 @@
-import 'package:ocr_mobile/features/OCR/domain/entities/ocr_result.dart';
+import 'package:ocr_mobile/features/OCR/Buisness Layer/entities/ocr_result.dart';
 import 'package:meta/meta.dart';
 
 class OcrResultModel extends OcrResult{

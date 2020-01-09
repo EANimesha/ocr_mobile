@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ocr_mobile/features/OCR/data/models/Ocr_result_model.dart';
-import 'package:ocr_mobile/features/OCR/domain/entities/ocr_result.dart';
+import 'package:ocr_mobile/features/OCR/Buisness Layer/entities/ocr_result.dart';
 
 import '../../../../fixtures/fixtures_reader.dart';
 

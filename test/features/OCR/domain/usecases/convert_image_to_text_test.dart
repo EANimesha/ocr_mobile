@@ -4,8 +4,8 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:ocr_mobile/features/OCR/data/repositories/ocr_repository.dart';
-import 'package:ocr_mobile/features/OCR/domain/entities/ocr_result.dart';
-import 'package:ocr_mobile/features/OCR/domain/usecases/convert_image_to_text.dart';
+import 'package:ocr_mobile/features/OCR/Buisness Layer/entities/ocr_result.dart';
+import 'package:ocr_mobile/features/OCR/Buisness Layer/usecases/get_result_usecase/convert_image_to_text.dart';
 
 class MockOcrRepository extends Mock implements OcrRepository{
 
@@ -19,7 +19,6 @@ void main(){
     mockOcrRepository =MockOcrRepository();
     usecase=ConvertImageToText(mockOcrRepository);
   });
-   
   final tFile=File('');
   final tOcrResult=OcrResult(meanConfidentialLevel: 0.95, textResult: 'test text',);
 
