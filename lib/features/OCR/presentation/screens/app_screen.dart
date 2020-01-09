@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:ocr_mobile/features/OCR/data/datasources/real_ocr_datasource.dart';
 import 'package:ocr_mobile/features/OCR/data/datasources/third_party_ocr_datasource.dart';
 import 'package:ocr_mobile/features/OCR/Buisness Layer/entities/ocr_result.dart';
 import 'package:ocr_mobile/features/OCR/Buisness Layer/usecases/get_image_usecase/image.dart';
@@ -15,7 +16,6 @@ class AppScreen extends StatefulWidget {
 }
 
 class _AppScreenState extends State<AppScreen> {
-
   File _image;
   ImageFactory imageFactory=ImageFactory();
   String _result="Welcome to the App";
@@ -24,7 +24,8 @@ class _AppScreenState extends State<AppScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Gallery Image'),
+        title: Text('OCR App'),
+        centerTitle: true,
       ),
        body:
           Center(
@@ -54,8 +55,12 @@ class _AppScreenState extends State<AppScreen> {
                 Container(
                    width: 300,
                    height: 300,
+                   decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black)
+                    ),
+                    padding: EdgeInsets.all(10.0),
                     child: _image == null
-                      ? Center(child:Text('No image selected.'))
+                      ? Center(child:Text('Select a camera or Gallery Image',style: TextStyle(fontSize: 25.0),))
                       : Image.file(_image),
                  ),
 
@@ -64,7 +69,16 @@ class _AppScreenState extends State<AppScreen> {
                    onPressed: ()=>_upload(_image,context),
                  )
                 ,
-                Text(_result)
+                Expanded(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width-20.0,
+                      color: Colors.blueGrey.shade400,
+                      padding: EdgeInsets.all(10.0),
+                      child:Center(
+                        child: _result=="Loading"? CircularProgressIndicator():Text(_result,style: TextStyle(fontSize: 20.0),),
+                      )
+                    ),
+                )
               ],
             )
           ),
@@ -73,7 +87,11 @@ class _AppScreenState extends State<AppScreen> {
 
 
 void _upload(File imageFile,BuildContext context)async{
-    ConvertImageToText convertImageToText=ConvertImageToText(FakeOcrRepository());
+    setState(() {
+      this._result="Loading";
+    });
+
+    ConvertImageToText convertImageToText=ConvertImageToText(RealOcrRepository());
     OcrResult res=await convertImageToText.call(image: imageFile);
     this.setState(() {
       if(res!=null){
@@ -81,6 +99,8 @@ void _upload(File imageFile,BuildContext context)async{
       }
     });
 }
+
+
 Future<void> getImage(String type) async {
     Picture picture= imageFactory.getFrom(type);
     File image = await picture.takeImage();
@@ -90,7 +110,6 @@ Future<void> getImage(String type) async {
       _image = image;
     });
   }
-  
 }
 
 

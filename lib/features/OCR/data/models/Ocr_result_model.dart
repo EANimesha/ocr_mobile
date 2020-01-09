@@ -3,17 +3,17 @@ import 'package:meta/meta.dart';
 
 class OcrResultModel extends OcrResult{
   OcrResultModel({
-    @required  double meanConfidentialLevel,
+    @required  String status,
     @required String textResult
-  }):super(meanConfidentialLevel:meanConfidentialLevel,textResult:textResult);
+  }):super(status:status,textResult:textResult);
 
   factory OcrResultModel.fromJson(Map<String,dynamic> json){
-    return OcrResultModel(meanConfidentialLevel: json['MeanConfidentialevel'],textResult: json['TextResult']);
+    return OcrResultModel(status: json['Status'],textResult: json['TextResult']);
   }
 
   Map<String,dynamic> toJson(){
     return{
-      'MeanConfidentialLevel':meanConfidentialLevel,
+      'Status':status,
       'TextResult':textResult
     };
   }
