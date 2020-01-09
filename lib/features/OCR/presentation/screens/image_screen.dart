@@ -2,12 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:ocr_mobile/features/OCR/data/datasources/third_party_ocr_datasource.dart';
-import 'package:ocr_mobile/features/OCR/data/repositories/ocr_repository.dart';
 import 'package:ocr_mobile/features/OCR/domain/entities/ocr_result.dart';
 import 'package:ocr_mobile/features/OCR/domain/usecases/convert_image_to_text.dart';
 import 'package:ocr_mobile/features/OCR/domain/usecases/get_image_usecase/image.dart';
 import 'package:ocr_mobile/features/OCR/domain/usecases/get_image_usecase/image_fatory.dart';
-import 'package:ocr_mobile/features/OCR/presentation/vm/ocr_bloc.dart';
 
 class ImageScreen extends StatefulWidget {
   ImageScreen({Key key}) : super(key: key);
@@ -20,6 +18,7 @@ class _ImageScreenState extends State<ImageScreen> {
 
   File _image;
   ImageFactory imageFactory=ImageFactory();
+  String _result="Welcome to the App";
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +26,7 @@ class _ImageScreenState extends State<ImageScreen> {
       appBar: AppBar(
         title: Text('Gallery Image'),
       ),
-       body: 
-      //  BlocProvider<OcrBloc>(
-      //     builder: (context)=>_bloc,
-      //     child: 
+       body:
           Center(
             child: Column(
               children: <Widget>[
@@ -65,54 +61,27 @@ class _ImageScreenState extends State<ImageScreen> {
 
                  RaisedButton(
                    child: Text("Convert to text"),
-                   onPressed: ()=>_upload(_image),
+                   onPressed: ()=>_upload(_image,context),
                  )
                 ,
-                StreamBuilder<OcrResult>(
-                  stream: bloc.outOcrResult,
-                  builder: (context,snapshot){
-                      if(!snapshot.hasData){
-                        return CircularProgressIndicator();
-                      }
-                      else{
-                      final result= snapshot.data;
-                      //  bloc.dispose();
-                      return Text(result.textResult);
-                      }
-                  }),
-                // BlocBuilder<OcrBloc,OcrState>(
-                //   bloc: _bloc,
-                //   builder: (context,state){
-                //     if(state is Empty){
-                //       return Text('Start Seaarching');
-                //     }
-                //     else if(state is Loaded){
-                //       return CircularProgressIndicator();
-                //     }
-                //     else if(state is Loaded){
-                //       return Text(state.result.textResult);
-                //     }else{
-                //       return Text('Hello');
-                //     }
-                //   },
-                // )
+                Text(_result)
               ],
             )
           ),
-      //  ),
     );
   }
 
 
-_upload(File imageFile) async{
-    OcrRepository repository=FakeOcrRepository();
-    // OcrRepository repository=RealOcrRepository();
-    ConvertImageToText convertImageToText=ConvertImageToText(repository);
-    await convertImageToText.call(image: imageFile);
-    // final blocOcr=BlocProvider.of<OcrBloc>(context);
-    // blocOcr.dispatch(ConvertToText(imageFile));
+void _upload(File imageFile,BuildContext context)async{
+    ConvertImageToText convertImageToText=ConvertImageToText(FakeOcrRepository());
+    OcrResult res=await convertImageToText.call(image: imageFile);
+    this.setState(() {
+      if(res!=null){
+        this._result=res.textResult;
+      }
+    });
 }
-Future getImage(String type) async {
+Future<void> getImage(String type) async {
     Picture picture= imageFactory.getFrom(type);
     File image = await picture.takeImage();
 
