@@ -13,7 +13,7 @@ class RealOcrRepository implements OcrRepository{
     // print(image.path);
     FormData formData=new FormData.from({
       "image":UploadFileInfo(image,image.path),
-      "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5kaWxpbmk5N0BnbWFpbC5jb20iLCJfaWQiOiI1ZTBmNGNiZTAzMzZjNTAwMDRiNzZiM2MiLCJpYXQiOjE1Nzg2NDY2ODEsImV4cCI6MTU3ODY1MDI4MX0.IIvAAUPFXWbF0EjsOZuvnzeWNbyzrJndA9g0Ozv_Qaw"
+      "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5kaWxpbmk5N0BnbWFpbC5jb20iLCJfaWQiOiI1ZTBmNGNiZTAzMzZjNTAwMDRiNzZiM2MiLCJpYXQiOjE1Nzg2NTE3MDEsImV4cCI6MTU3ODY1NTMwMX0.CWtBk-N_uo7FxxcIZNHf60t7tCnQ2yTHLzzQqh_3G0g"
     });
 
   try{

@@ -9,11 +9,44 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: LaunchScreen());
+  }
+}
+
+class LaunchScreen extends StatelessWidget {
+  const LaunchScreen({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.lightBlue.shade200,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            "OPTICAL CHARACTER RECOGNITION APP",
+            style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+          Image.asset('assets/images/pic.png'),
+          RaisedButton(
+            color: Colors.black38,
+            child: Text(
+              "Get Started",
+              style: TextStyle(color: Colors.white,fontSize: 20.0),
+            ),
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AppScreen()));
+            },
+          )
+        ],
       ),
-      home: AppScreen(),
     );
   }
 }
