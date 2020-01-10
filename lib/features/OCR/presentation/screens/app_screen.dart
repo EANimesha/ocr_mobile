@@ -18,7 +18,8 @@ class AppScreen extends StatefulWidget {
 class _AppScreenState extends State<AppScreen> {
   File _image;
   ImageFactory imageFactory=ImageFactory();
-  String _result="Welcome to the App";
+  Future<OcrResult> _ocrResult;
+  ConvertImageToText convertImageToText=ConvertImageToText(RealOcrRepository());
 
   @override
   Widget build(BuildContext context) {
@@ -28,78 +29,87 @@ class _AppScreenState extends State<AppScreen> {
         centerTitle: true,
       ),
        body:
-          Center(
-            child: Column(
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    RaisedButton(
-                      color: Colors.blue,
-                      child: Text('Camera Image'),
-                      onPressed:(){
-                        getImage("camera");
-                      } ,
-                    ),
-                    SizedBox(width: 30.0,),
-                    RaisedButton(
-                      color: Colors.blue,
-                      child: Text('Gallery Image'),
-                      onPressed: (){
-                        getImage("gallery");
-                      },
-                    )
-                  ],
-                ),
-
-                Container(
-                   width: 300,
-                   height: 300,
-                   decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black)
-                    ),
-                    padding: EdgeInsets.all(10.0),
-                    child: _image == null
-                      ? Center(child:Text('Select a camera or Gallery Image',style: TextStyle(fontSize: 25.0),))
-                      : Image.file(_image),
-                 ),
-
-                 RaisedButton(
-                   child: Text("Convert to text"),
-                   onPressed: ()=>_upload(_image,context),
-                 )
-                ,
-                Expanded(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width-20.0,
-                      color: Colors.blueGrey.shade400,
-                      padding: EdgeInsets.all(10.0),
-                      child:Center(
-                        child: _result=="Loading"? CircularProgressIndicator():Text(_result,style: TextStyle(fontSize: 20.0),),
+          SingleChildScrollView(
+            child: Center(
+                child: Column( 
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      RaisedButton(
+                        color: Colors.blue,
+                        child: Text('Camera Image'),
+                        onPressed:(){
+                          getImage("camera");
+                        } ,
+                      ),
+                      SizedBox(width: 30.0,),
+                      RaisedButton(
+                        color: Colors.blue,
+                        child: Text('Gallery Image'),
+                        onPressed: (){
+                          getImage("gallery");
+                        },
                       )
-                    ),
-                )
-              ],
+                    ],
+                  ),
+
+                  Container(
+                     width: 300,
+                     height: 300,
+                     decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black)
+                      ),
+                      padding: EdgeInsets.all(10.0),
+                      child: _image == null
+                        ? Center(child:Text('Select a camera or Gallery Image',style: TextStyle(fontSize: 25.0),))
+                        : Image.file(_image),
+                   ),
+
+                   RaisedButton(
+                     child: Text("Convert to text"),
+                     onPressed: ()=>_upload(_image)
+                   )
+                  ,
+                  Container(
+                        width: MediaQuery.of(context).size.width-20.0,
+                        color: Colors.blueGrey.shade400,
+                        padding: EdgeInsets.all(10.0),
+                        child:Center(
+                          child: FutureBuilder<OcrResult>(
+                                  future: _ocrResult,
+                                  builder: (context,snapshot){
+                                    if(snapshot.connectionState==ConnectionState.waiting){
+                                      return CircularProgressIndicator();
+                                    }else if(snapshot.hasError){
+                                      final error=snapshot.error;
+                                      return Text(error.toString());
+                                    }
+                                    else if(snapshot.hasData){
+                                      final res=snapshot.data;
+                                      return  res.textResult==null? 
+                                      CircularProgressIndicator():
+                                      Text(res.textResult,style: TextStyle(fontSize: 20.0),);
+                                    }
+                                    else{
+                                      return Text('Welcome To the App');
+                                    }
+                                  },
+                                )
+                        )
+                  )
+                ],
+              ),
             )
           ),
     );
   }
 
-
-void _upload(File imageFile,BuildContext context)async{
-    setState(() {
-      this._result="Loading";
-    });
-
-    ConvertImageToText convertImageToText=ConvertImageToText(RealOcrRepository());
-    OcrResult res=await convertImageToText.call(image: imageFile);
-    this.setState(() {
-      if(res!=null){
-        this._result=res.textResult;
-      }
-    });
+void _upload(File imageFile)async{
+  setState(() {
+    _ocrResult=convertImageToText.call(image: _image);
+  });
 }
-
 
 Future<void> getImage(String type) async {
     Picture picture= imageFactory.getFrom(type);

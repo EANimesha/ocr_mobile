@@ -13,13 +13,27 @@ class RealOcrRepository implements OcrRepository{
     // print(image.path);
     FormData formData=new FormData.from({
       "image":UploadFileInfo(image,image.path),
-      "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5kaWxpbmk5N0BnbWFpbC5jb20iLCJfaWQiOiI1ZTBmNGNiZTAzMzZjNTAwMDRiNzZiM2MiLCJpYXQiOjE1Nzg1ODY3ODMsImV4cCI6MTU3ODU5MDM4M30.uZnITDXLZZeBQMjqj8vmWg9PqywLXsqgF6wYYFwsi0Y"
+      "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5kaWxpbmk5N0BnbWFpbC5jb20iLCJfaWQiOiI1ZTBmNGNiZTAzMzZjNTAwMDRiNzZiM2MiLCJpYXQiOjE1Nzg2NDY2ODEsImV4cCI6MTU3ODY1MDI4MX0.IIvAAUPFXWbF0EjsOZuvnzeWNbyzrJndA9g0Ozv_Qaw"
     });
 
-      Dio dio = new Dio();
-      var response=await dio.post("https://ocr-system.herokuapp.com/image",data:formData);
-      print(json.encode(response.data).toString());
-
+  try{
+    Dio dio = new Dio();
+    var response=await dio.post("https://ocr-system.herokuapp.com/image",data:formData);
+    print(json.encode(response.data).toString());
     return OcrResultModel.fromJson(response.data);
+  }catch(e){
+    throw Failure("An error Occured.Please Try another photo");
   }
+
+  }
+}
+
+class Failure {
+  // Use something like "int code;" if you want to translate error messages
+  final String message;
+
+  Failure(this.message);
+
+  @override
+  String toString() => message;
 }
