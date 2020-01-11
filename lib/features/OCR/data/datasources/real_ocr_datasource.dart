@@ -13,7 +13,7 @@ class RealOcrRepository implements OcrRepository{
     // print(image.path);
     FormData formData=new FormData.from({
       "image":UploadFileInfo(image,image.path),
-      "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5kaWxpbmk5N0BnbWFpbC5jb20iLCJfaWQiOiI1ZTBmNGNiZTAzMzZjNTAwMDRiNzZiM2MiLCJpYXQiOjE1Nzg2NTE3MDEsImV4cCI6MTU3ODY1NTMwMX0.CWtBk-N_uo7FxxcIZNHf60t7tCnQ2yTHLzzQqh_3G0g"
+      "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5pbWVzaGFzZXVva0BnbWFpbC5jb20iLCJfaWQiOiI1ZTE5YmY4Yzc1MTgxMjAwMDQ1NGEzMWYiLCJpYXQiOjE1Nzg3NDU4MTEsImV4cCI6MTU3ODc0OTQxMX0.DH8XB6-Kqh7o2w1BCJhVGrUeHfn3FvJVOGy4Ux-SaLc"
     });
 
   try{
@@ -22,18 +22,8 @@ class RealOcrRepository implements OcrRepository{
     print(json.encode(response.data).toString());
     return OcrResultModel.fromJson(response.data);
   }catch(e){
-    throw Failure("An error Occured.Please Try another photo");
+    throw Exception(e);
   }
 
   }
-}
-
-class Failure {
-  // Use something like "int code;" if you want to translate error messages
-  final String message;
-
-  Failure(this.message);
-
-  @override
-  String toString() => message;
 }

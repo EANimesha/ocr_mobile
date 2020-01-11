@@ -1,12 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:ocr_mobile/features/OCR/data/datasources/real_ocr_datasource.dart';
-import 'package:ocr_mobile/features/OCR/data/datasources/third_party_ocr_datasource.dart';
-import 'package:ocr_mobile/features/OCR/Buisness Layer/entities/ocr_result.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ocr_mobile/features/OCR/Buisness Layer/usecases/get_image_usecase/image.dart';
 import 'package:ocr_mobile/features/OCR/Buisness Layer/usecases/get_image_usecase/image_fatory.dart';
-import 'package:ocr_mobile/features/OCR/Buisness Layer/usecases/get_result_usecase/convert_image_to_text.dart';
+import 'package:ocr_mobile/features/OCR/presentation/screens/bloc/bloc.dart';
 
 class AppScreen extends StatefulWidget {
   AppScreen({Key key}) : super(key: key);
@@ -18,9 +16,6 @@ class AppScreen extends StatefulWidget {
 class _AppScreenState extends State<AppScreen> {
   File _image;
   ImageFactory imageFactory = ImageFactory();
-  Future<OcrResult> _ocrResult;
-  ConvertImageToText convertImageToText =
-      ConvertImageToText(RealOcrRepository());
 
   @override
   Widget build(BuildContext context) {
@@ -73,46 +68,43 @@ class _AppScreenState extends State<AppScreen> {
             RaisedButton(
                 child: Text("Convert to text"),
                 onPressed: () => _upload(_image)),
-            SizedBox(height: 10.0,),
+            SizedBox(
+              height: 10.0,
+            ),
             Container(
                 width: MediaQuery.of(context).size.width - 20.0,
                 color: Colors.blueGrey.shade400,
                 padding: EdgeInsets.all(10.0),
                 child: Center(
-                    child: FutureBuilder<OcrResult>(
-                  future: _ocrResult,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
-                    } else if (snapshot.hasError) {
-                      final error = snapshot.error;
-                      return Text(
-                        error.toString(),
-                        style: TextStyle(color: Colors.red),
-                      );
-                    } else if (snapshot.hasData) {
-                      final res = snapshot.data;
-                      return res.textResult == null
-                          ? CircularProgressIndicator()
-                          : Text(
-                              res.textResult,
-                              style: TextStyle(fontSize: 20.0),
-                            );
-                    } else {
-                      return Text('Welcome To the App!!',style: TextStyle(color: Colors.white),);
-                    }
-                  },
-                )))
+                  child: BlocBuilder<OcrBloc, OcrState>(
+                    builder: (context, state) {
+                      if (state is OcrInitialState) {
+                        return Text(
+                          'Welcome To the App!!',
+                          style: TextStyle(color: Colors.white),
+                        );
+                      } else if (state is OcrLoadingState) {
+                        return CircularProgressIndicator();
+                      } else if (state is OcrLoadedState) {
+                        return Text(
+                          state.ocrResult.textResult,
+                          style: TextStyle(fontSize: 20.0),
+                        );
+                      } else if (state is OcrErrorState) {
+                        return Text('error');
+                      }
+                    },
+                  ),
+                ))
           ],
         ),
       )),
     );
   }
 
-  void _upload(File imageFile) async {
-    setState(() {
-      _ocrResult = convertImageToText.call(image: _image);
-    });
+  void _upload(File imageFile) {
+    final ocrBloc = BlocProvider.of<OcrBloc>(context);
+    ocrBloc.add(GetOcrResult(imageFile));
   }
 
   Future<void> getImage(String type) async {

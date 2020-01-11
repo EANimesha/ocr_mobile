@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ocr_mobile/features/OCR/data/datasources/real_ocr_datasource.dart';
+import 'package:ocr_mobile/features/OCR/presentation/screens/bloc/bloc.dart';
 
 import 'features/OCR/presentation/screens/app_screen.dart';
 
@@ -13,7 +16,11 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: LaunchScreen());
+        home: BlocProvider(
+          builder: (context)=>OcrBloc(RealOcrRepository()),
+          child: AppScreen(),
+        )
+        );
   }
 }
 
