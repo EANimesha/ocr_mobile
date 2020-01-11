@@ -40,3 +40,10 @@ class ImageSelectedState extends OcrState{
   List<Object> get props => [image];
 
 }
+
+class ImageNotSelectedState extends OcrState{
+  const ImageNotSelectedState();
+  @override
+  List<Object> get props => [];
+
+}

@@ -2,21 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ocr_mobile/features/OCR/Buisness Layer/usecases/get_image_usecase/image.dart';
-import 'package:ocr_mobile/features/OCR/Buisness Layer/usecases/get_image_usecase/image_fatory.dart';
 import 'package:ocr_mobile/features/OCR/presentation/bloc/bloc.dart';
 import 'package:ocr_mobile/features/OCR/presentation/screens/result_screen.dart';
 
-class AppScreen extends StatefulWidget {
-  AppScreen({Key key}) : super(key: key);
-
-  @override
-  _AppScreenState createState() => _AppScreenState();
-}
-
-class _AppScreenState extends State<AppScreen> {
-  File _image;
-  ImageFactory imageFactory = ImageFactory();
+class AppScreen extends StatelessWidget {
+  const AppScreen({Key key}):super(key:key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,12 +16,11 @@ class _AppScreenState extends State<AppScreen> {
         centerTitle: true,
       ),
       body: Container(
-          child: Center(
+        child: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-             SizedBox(
-              height: 10.0,
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -39,7 +28,7 @@ class _AppScreenState extends State<AppScreen> {
                   color: Colors.blue,
                   child: Text('Camera Image'),
                   onPressed: () {
-                    getImage("camera");
+                    getImage("camera",context);
                   },
                 ),
                 SizedBox(
@@ -49,52 +38,77 @@ class _AppScreenState extends State<AppScreen> {
                   color: Colors.blue,
                   child: Text('Gallery Image'),
                   onPressed: () {
-                    getImage("gallery");
+                    getImage("gallery",context);
                   },
                 )
               ],
             ),
-             SizedBox(
+            SizedBox(
               height: 10.0,
             ),
             Container(
-              width: 300,
-              height: 300,
-              decoration:
-                  BoxDecoration(border: Border.all(color: Colors.black)),
-              padding: EdgeInsets.all(10.0),
-              child: _image == null
-                  ? Center(
-                      child: Text(
-                      'Select a camera or Gallery Image',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 25.0),
-                    ))
-                  : Image.file(_image),
+              child: BlocBuilder<OcrBloc, OcrState>(
+                builder: (context, state) {
+                  if (state is OcrInitialState) {
+                    return welcome();
+                  } else if (state is ImageSelectedState) {
+                    return displayDataAfterImageSelected(state.image,context);
+                  } else {
+                    return Text(' ');
+                  }
+                },
+              ),
             ),
-            RaisedButton(
-                child: Text("Convert to text"),
-                onPressed: (){
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder:(_)=>BlocProvider.value(
-                      value:BlocProvider.of<OcrBloc>(context),
-                      child: ResultScreen(_image),
-                    )
-                  ));
-                  },
-        ),
           ],
         ),
       )),
     );
   }
 
-  Future<void> getImage(String type) async {
-    Picture picture = imageFactory.getFrom(type);
-    File image = await picture.takeImage();
+  Widget welcome() {
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          height: 20.0,
+        ),
+         Container(
+           padding: EdgeInsets.all(15.0),
+           child: Text(
+              'Welcome To the App!!\n Select A Image from Camera or Gallery',
+              style: TextStyle(color: Colors.black,fontSize: 20.0),
+              textAlign: TextAlign.center,
+            ),
+         ),
+      ],
+    );
+  }
 
-    setState(() {
-      _image = image;
-    });
+  Widget displayDataAfterImageSelected(File image,BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Container(
+          width: 300,
+          height: 300,
+          decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+          padding: EdgeInsets.all(10.0),
+          child: Image.file(image),
+        ),
+        RaisedButton(
+          child: Text("Convert to text"),
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => BlocProvider.value(
+                      value: BlocProvider.of<OcrBloc>(context),
+                      child: ResultScreen(image),
+                    )));
+          },
+        ),
+      ],
+    );
+  }
+
+   void getImage(String type,BuildContext context) {
+    final ocrBloc = BlocProvider.of<OcrBloc>(context);
+    ocrBloc.add(SelectImage(type));
   }
 }

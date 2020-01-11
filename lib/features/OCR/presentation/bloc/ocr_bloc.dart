@@ -1,14 +1,15 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:ocr_mobile/features/OCR/Buisness%20Layer/usecases/get_image_usecase/image_fatory.dart';
 import 'package:ocr_mobile/features/OCR/data/repositories/ocr_repository.dart';
 import './bloc.dart';
 
 class OcrBloc extends Bloc<OcrEvent, OcrState> {
   final OcrRepository ocrRepository;
+  final ImageFactory imageFactory;
 
-  OcrBloc(this.ocrRepository);
+  OcrBloc(this.ocrRepository, this.imageFactory);
 
 
   @override
@@ -29,6 +30,13 @@ class OcrBloc extends Bloc<OcrEvent, OcrState> {
         }else{
           yield OcrErrorState("some error occured. Try with another image");
         }
+      }
+    }else if(event is SelectImage){
+      try{
+        final image=await imageFactory.getFrom(event.type).takeImage();
+        yield ImageSelectedState(image);
+      }catch(e){
+        print(e.toString());
       }
     }
   }

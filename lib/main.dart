@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ocr_mobile/features/OCR/Buisness%20Layer/usecases/get_image_usecase/image_fatory.dart';
 import 'package:ocr_mobile/features/OCR/data/datasources/real_ocr_datasource.dart';
 import 'package:ocr_mobile/features/OCR/presentation/screens/launch_screen.dart';
 import 'features/OCR/presentation/bloc/bloc.dart';
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         home: BlocProvider<OcrBloc>(
-          builder: (context)=>OcrBloc(RealOcrRepository()),
+          builder: (context)=>OcrBloc(RealOcrRepository(),ImageFactory()),
           child: LaunchScreen(),
         )
         );

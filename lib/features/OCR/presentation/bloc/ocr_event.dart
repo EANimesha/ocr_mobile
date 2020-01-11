@@ -14,3 +14,13 @@ class GetOcrResult extends OcrEvent{
   @override
   List get props => [image];
 }
+
+class SelectImage extends OcrEvent{
+  final String type;
+
+  const SelectImage(this.type);
+
+  @override
+  List get props => [type];
+
+}
