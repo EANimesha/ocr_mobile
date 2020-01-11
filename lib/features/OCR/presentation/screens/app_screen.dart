@@ -76,24 +76,33 @@ class _AppScreenState extends State<AppScreen> {
                 color: Colors.blueGrey.shade400,
                 padding: EdgeInsets.all(10.0),
                 child: Center(
-                  child: BlocBuilder<OcrBloc, OcrState>(
-                    builder: (context, state) {
-                      if (state is OcrInitialState) {
-                        return Text(
-                          'Welcome To the App!!',
-                          style: TextStyle(color: Colors.white),
+                  child: BlocListener<OcrBloc, OcrState>(
+                    listener: (context,state){
+                      if(state is OcrErrorState){
+                        Scaffold.of(context).showSnackBar(
+                          SnackBar(content: Text(state.message),)
                         );
-                      } else if (state is OcrLoadingState) {
-                        return CircularProgressIndicator();
-                      } else if (state is OcrLoadedState) {
-                        return Text(
-                          state.ocrResult.textResult,
-                          style: TextStyle(fontSize: 20.0),
-                        );
-                      } else if (state is OcrErrorState) {
-                        return Text('error');
                       }
                     },
+                    child: BlocBuilder<OcrBloc, OcrState>(
+                      builder: (context, state) {
+                        if (state is OcrInitialState) {
+                          return Text(
+                            'Welcome To the App!!',
+                            style: TextStyle(color: Colors.white),
+                          );
+                        } else if (state is OcrLoadingState) {
+                          return CircularProgressIndicator();
+                        } else if (state is OcrLoadedState) {
+                          return Text(
+                            state.ocrResult.textResult,
+                            style: TextStyle(fontSize: 20.0),
+                          );
+                        } else if (state is OcrErrorState) {
+                          return Text(' ');
+                        }
+                      },
+                    ),
                   ),
                 ))
           ],

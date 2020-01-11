@@ -13,16 +13,21 @@ class RealOcrRepository implements OcrRepository{
     // print(image.path);
     FormData formData=new FormData.from({
       "image":UploadFileInfo(image,image.path),
-      "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5pbWVzaGFzZXVva0BnbWFpbC5jb20iLCJfaWQiOiI1ZTE5YmY4Yzc1MTgxMjAwMDQ1NGEzMWYiLCJpYXQiOjE1Nzg3NDU4MTEsImV4cCI6MTU3ODc0OTQxMX0.DH8XB6-Kqh7o2w1BCJhVGrUeHfn3FvJVOGy4Ux-SaLc"
+      "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5pbWVzaGFzZXVva0BnbWFpbC5jb20iLCJfaWQiOiI1ZTE5YmY4Yzc1MTgxMjAwMDQ1NGEzMWYiLCJpYXQiOjE1Nzg3NDk5ODYsImV4cCI6MTU3ODc1MzU4Nn0.8GcSCniZqX-6MUWmr6e44RKG53W57ZhkccDrLWAevUI"
     });
 
   try{
     Dio dio = new Dio();
     var response=await dio.post("https://ocr-system.herokuapp.com/image",data:formData);
-    print(json.encode(response.data).toString());
-    return OcrResultModel.fromJson(response.data);
+
+    if(response.statusCode!=200){
+      throw Exception('Server Error');
+    }else{
+      print(json.encode(response.data).toString());
+      return OcrResultModel.fromJson(response.data);
+    }
   }catch(e){
-    throw Exception(e);
+    throw Exception(e.toString());
   }
 
   }

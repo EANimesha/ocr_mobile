@@ -16,9 +16,9 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: BlocProvider(
+        home: BlocProvider<OcrBloc>(
           builder: (context)=>OcrBloc(RealOcrRepository()),
-          child: AppScreen(),
+          child: LaunchScreen(),
         )
         );
   }
@@ -48,8 +48,12 @@ class LaunchScreen extends StatelessWidget {
               style: TextStyle(color: Colors.white,fontSize: 20.0),
             ),
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => AppScreen()));
+              Navigator.of(context).push(MaterialPageRoute(
+                builder:(_)=>BlocProvider.value(
+                  value:BlocProvider.of<OcrBloc>(context),
+                  child: AppScreen(),
+                )
+              ));
             },
           )
         ],
