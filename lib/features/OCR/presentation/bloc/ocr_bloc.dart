@@ -1,6 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:bloc/bloc.dart';
-import 'package:ocr_mobile/core/error/failures.dart';
+import 'package:dio/dio.dart';
 import 'package:ocr_mobile/features/OCR/data/repositories/ocr_repository.dart';
 import './bloc.dart';
 
@@ -22,8 +23,12 @@ class OcrBloc extends Bloc<OcrEvent, OcrState> {
       try{
         final result=await ocrRepository.convertImageToText(event.image);
         yield OcrLoadedState(result);
-      }on Failure{
-        yield OcrErrorState("some error occured");
+      }catch(e){
+        if(e is DioError){
+          yield OcrErrorState("Network Error.check whether device is online");
+        }else{
+          yield OcrErrorState("some error occured. Try with another image");
+        }
       }
     }
   }

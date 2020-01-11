@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 import 'package:ocr_mobile/features/OCR/Buisness%20Layer/entities/ocr_result.dart';
 
@@ -29,4 +31,12 @@ class OcrErrorState extends OcrState {
   const OcrErrorState(this.message);
   @override
   List<Object> get props => [message];
+}
+
+class ImageSelectedState extends OcrState{
+  final File image;
+  const ImageSelectedState(this.image);
+  @override
+  List<Object> get props => [image];
+
 }

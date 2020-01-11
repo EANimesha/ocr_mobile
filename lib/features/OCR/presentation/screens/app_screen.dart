@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ocr_mobile/features/OCR/Buisness Layer/usecases/get_image_usecase/image.dart';
 import 'package:ocr_mobile/features/OCR/Buisness Layer/usecases/get_image_usecase/image_fatory.dart';
-import 'package:ocr_mobile/features/OCR/presentation/screens/bloc/bloc.dart';
+import 'package:ocr_mobile/features/OCR/presentation/bloc/bloc.dart';
+import 'package:ocr_mobile/features/OCR/presentation/screens/result_screen.dart';
 
 class AppScreen extends StatefulWidget {
   AppScreen({Key key}) : super(key: key);
@@ -24,10 +25,13 @@ class _AppScreenState extends State<AppScreen> {
         title: Text('OCR App'),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
+      body: Container(
           child: Center(
         child: Column(
           children: <Widget>[
+             SizedBox(
+              height: 10.0,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -50,6 +54,9 @@ class _AppScreenState extends State<AppScreen> {
                 )
               ],
             ),
+             SizedBox(
+              height: 10.0,
+            ),
             Container(
               width: 300,
               height: 300,
@@ -67,53 +74,19 @@ class _AppScreenState extends State<AppScreen> {
             ),
             RaisedButton(
                 child: Text("Convert to text"),
-                onPressed: () => _upload(_image)),
-            SizedBox(
-              height: 10.0,
-            ),
-            Container(
-                width: MediaQuery.of(context).size.width - 20.0,
-                color: Colors.blueGrey.shade400,
-                padding: EdgeInsets.all(10.0),
-                child: Center(
-                  child: BlocListener<OcrBloc, OcrState>(
-                    listener: (context,state){
-                      if(state is OcrErrorState){
-                        Scaffold.of(context).showSnackBar(
-                          SnackBar(content: Text(state.message),)
-                        );
-                      }
-                    },
-                    child: BlocBuilder<OcrBloc, OcrState>(
-                      builder: (context, state) {
-                        if (state is OcrInitialState) {
-                          return Text(
-                            'Welcome To the App!!',
-                            style: TextStyle(color: Colors.white),
-                          );
-                        } else if (state is OcrLoadingState) {
-                          return CircularProgressIndicator();
-                        } else if (state is OcrLoadedState) {
-                          return Text(
-                            state.ocrResult.textResult,
-                            style: TextStyle(fontSize: 20.0),
-                          );
-                        } else if (state is OcrErrorState) {
-                          return Text(' ');
-                        }
-                      },
-                    ),
-                  ),
-                ))
+                onPressed: (){
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder:(_)=>BlocProvider.value(
+                      value:BlocProvider.of<OcrBloc>(context),
+                      child: ResultScreen(_image),
+                    )
+                  ));
+                  },
+        ),
           ],
         ),
       )),
     );
-  }
-
-  void _upload(File imageFile) {
-    final ocrBloc = BlocProvider.of<OcrBloc>(context);
-    ocrBloc.add(GetOcrResult(imageFile));
   }
 
   Future<void> getImage(String type) async {
