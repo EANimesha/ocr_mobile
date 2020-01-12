@@ -21,8 +21,6 @@ Email          :   nimeshadilini999@gmail.com </pre>
     - flutter_bloc - for BloC pattern codes
     
 ## Diagrams
-Component Diagram
-![Component Diagram](https://github.com/EANimesha/ocr_mobile/blob/master/project_info/component.jpg)
 
 Code Diagrams
 ![code Diagram](https://github.com/EANimesha/ocr_mobile/blob/master/project_info/code1.jpg)
